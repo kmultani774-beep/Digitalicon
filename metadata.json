@@ -1,0 +1,8 @@
+{
+  "name": "DigiMart Pro",
+  "description": "A full-featured digital products e-commerce platform for selling ebooks, software, and courses with WhatsApp payment integration and automated delivery.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
