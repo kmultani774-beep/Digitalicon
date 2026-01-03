@@ -27,52 +27,14 @@ export const mockService = {
     }
   },
 
-  // Google Identity Login
-  loginWithGoogle: async (googlePayload: { name: string, email: string, sub: string }): Promise<User> => {
-    const users: User[] = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    let user = users.find(u => u.email === googlePayload.email);
-    
-    if (!user) {
-      // Create new user if first time
-      user = {
-        id: `g-${googlePayload.sub}`,
-        name: googlePayload.name,
-        email: googlePayload.email,
-        role: UserRole.USER,
-        createdAt: new Date().toISOString()
-      };
-      users.push(user);
-      localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    }
-    
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
-    return user;
-  },
-
   login: async (email: string, pass: string): Promise<User | null> => {
     const users: User[] = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
     const user = users.find(u => u.email === email);
-    if (user) {
-      if (user.role === UserRole.ADMIN && pass !== 'admin786') return null;
+    if (user && user.role === UserRole.ADMIN && pass === 'admin786') {
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
       return user;
     }
     return null;
-  },
-
-  register: async (name: string, email: string): Promise<User> => {
-    const users: User[] = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-    const newUser: User = {
-      id: `u-${Date.now()}`,
-      name,
-      email,
-      role: UserRole.USER,
-      createdAt: new Date().toISOString()
-    };
-    users.push(newUser);
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
-    return newUser;
   },
 
   getCurrentUser: (): User | null => {
@@ -85,7 +47,8 @@ export const mockService = {
   },
 
   getProducts: async (): Promise<Product[]> => {
-    return JSON.parse(localStorage.getItem(PRODUCTS_KEY) || '[]');
+    const stored = localStorage.getItem(PRODUCTS_KEY);
+    return stored ? JSON.parse(stored) : [];
   },
 
   createOrder: async (userId: string, productId: string, productName: string, amount: number, customerPhone: string): Promise<Order> => {
@@ -113,12 +76,8 @@ export const mockService = {
   },
 
   getOrders: async (): Promise<Order[]> => {
-    return JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-  },
-
-  getUserOrders: async (userId: string): Promise<Order[]> => {
-    const orders = await mockService.getOrders();
-    return orders.filter(o => o.userId === userId);
+    const stored = localStorage.getItem(ORDERS_KEY);
+    return stored ? JSON.parse(stored) : [];
   },
 
   updateOrderStatus: async (orderId: string, status: OrderStatus): Promise<Order> => {
@@ -160,9 +119,5 @@ export const mockService = {
     const products = await mockService.getProducts();
     const filtered = products.filter(p => p.id !== id);
     localStorage.setItem(PRODUCTS_KEY, JSON.stringify(filtered));
-  },
-
-  getAllUsers: async (): Promise<User[]> => {
-    return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
   }
 };

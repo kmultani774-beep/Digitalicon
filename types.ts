@@ -20,7 +20,7 @@ export enum Category {
 
 export interface SourceFile {
   filename: string;
-  language: 'html' | 'css' | 'javascript' | 'react' | 'python' | 'text';
+  language: string;
   content: string;
 }
 
@@ -34,7 +34,7 @@ export interface Product {
   discountPrice?: number;
   category: Category;
   fileUrl: string;
-  sourceCode: SourceFile[]; // New field to store actual product code
+  sourceCode: SourceFile[]; 
   tags: string[];
   demoLink?: string;
   rating: number;
@@ -43,7 +43,6 @@ export interface Product {
   createdAt: string;
 }
 
-// Fixed: Added missing User interface definition
 export interface User {
   id: string;
   name: string;
@@ -61,8 +60,7 @@ export interface Order {
   amount: number;
   status: OrderStatus;
   paymentMethod: string;
-  customerPhone: string; // Captured to reply back to user
-  downloadLink?: string;
+  customerPhone: string;
   createdAt: string;
 }
 
